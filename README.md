@@ -21,7 +21,7 @@
 * Make sure you have [helm](https://helm.sh/docs/intro/install/) installed on your local computer. 
 * Change directory into the root of this repo.
 * Modify the [values.yml](values.yaml), [config.yml](./templates/config.yml) and other files in the [template](templates) folder to suit your need.
-* Run ``` helm install <chartname> kutt-app ``` **(Change <chartnname> to a name of your choice)**
+* Run ``` helm install <chartname> kutt-app ``` **(Change 'chartnname' to a name of your choice)**
 
 ### Docker 
 
