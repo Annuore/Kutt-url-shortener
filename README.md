@@ -1,4 +1,4 @@
-# HELM
+# Kutt (Helm)
 ## [Kutt.it](https://github.com/thedevs-network/kutt)
 **Kutt** is a modern URL shortener with support for custom domains. Shorten URLs, manage your links and view the click rate statistics. This project installs and configures the **Kutt** app using **HELM**. Visit the [Official Website](https://kutt.it) for more details and documentation.
 </br>
