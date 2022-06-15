@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kutt-pvc-red
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-red
+  resources:
+    requests:
+      storage: 6Gi
