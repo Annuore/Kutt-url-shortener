@@ -1,0 +1,340 @@
+---
+# Source: kuttt-app/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: release-name-kuttt-app
+  labels:
+    helm.sh/chart: kuttt-app-0.1.0
+    app.kubernetes.io/name: kuttt-app
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: kuttt-app/templates/secret.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+data:
+    POSTGRES_PASSWORD: cGFzcwo=
+    POSTGRES_DB: a3V0dAo=
+    DB_NAME: a3V0dAo=
+    DB_PASSWORD: cGFzcwo=
+---
+# Source: kuttt-app/templates/config.yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kutt-config
+data:
+  .env:  |
+    
+    SITE_NAME: Kutt
+    DEFAULT_DOMAIN: http://localhost
+    LINK_LENGTH: 6
+    DB_HOST: postgres
+    DB_PORT: 5432
+    DB_USER: user
+    DB_SSL: false
+    # NEO4J_DB_URI: bolt://localhost
+    # NEO4J_DB_USERNAME: neo4j
+    # NEO4J_DB_PASSWORD: pass
+    
+    REDIS_PORT: 6379 
+    DISALLOW_REGISTRATION: false
+    DISALLOW_ANONYMOUS_LINKS: false
+    POSTGRES_USER: user
+    POSTGRES_DB: kutt
+
+    # The daily limit for each user
+    USER_LIMIT_PER_DAY: 50
+
+    NON_USER_COOLDOWN: 0
+
+    # Max number of visits for each link to have detailed stats
+    DEFAULT_MAX_STATS_PER_LINK: 5000
+
+    # Use HTTPS for links with custom domain
+    CUSTOM_DOMAIN_USE_HTTPS: false
+
+    # A passphrase to encrypt JWT. Use a long and secure key.
+    JWT_SECRET: securekey
+
+    # Admin emails so they can access admin actions on settings page
+    # Comma seperated
+    # ADMIN_EMAILS:
+    # Your email host details to use to send verification emails.
+    # More info on http://nodemailer.com/
+    # Mail from example "Kutt <support@kutt.it>". Leave empty to use MAIL_USER
+    MAIL_HOST: 0.0.0.0
+    MAIL_PORT: 25
+    MAIL_SECURE: true
+    MAIL_USER: k8s@mail.kutt
+    # MAIL_FROM:
+    MAIL_PASSWORD: admin 
+
+    # Support email to show on the app
+    CONTACT_EMAIL: annuore@gmail
+  POSTGRES_USER: user
+  POSTGRES_DB: kutt
+---
+# Source: kuttt-app/templates/stclass.yml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-pst
+provisioner: pd.csi.storage.gke.io
+parameters:
+  type: pd-ssd
+---
+# Source: kuttt-app/templates/stclass0.yml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-red
+provisioner: pd.csi.storage.gke.io
+parameters:
+  type: pd-ssd
+---
+# Source: kuttt-app/templates/pvc-pst.yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kutt-pvc-pst
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-pst
+  resources:
+    requests:
+      storage: 6Gi
+---
+# Source: kuttt-app/templates/pvc-red.yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kutt-pvc-red
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-red
+  resources:
+    requests:
+      storage: 6Gi
+---
+# Source: kuttt-app/templates/db-svc-pst.yml
+apiVersion: v1
+kind: Service 
+metadata: 
+  name: postgres
+  labels:
+    helm.sh/chart: kuttt-app-0.1.0
+    app.kubernetes.io/name: kuttt-app
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports: 
+    - targetPort: 5432
+      port: 5432
+  selector:
+    app.kubernetes.io/name: kuttt-app
+    app.kubernetes.io/instance: release-name
+---
+# Source: kuttt-app/templates/db-svc-red.yml
+apiVersion: v1
+kind: Service 
+metadata: 
+  name: redis 
+  labels:
+    helm.sh/chart: kuttt-app-0.1.0
+    app.kubernetes.io/name: kuttt-app
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports: 
+    - targetPort: 6379
+      port: 6379
+  selector:
+    app.kubernetes.io/name: kuttt-app
+    app.kubernetes.io/instance: release-name
+---
+# Source: kuttt-app/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: release-name-kuttt-app
+  labels:
+    helm.sh/chart: kuttt-app-0.1.0
+    app.kubernetes.io/name: kuttt-app
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: kuttt-app
+    app.kubernetes.io/instance: release-name
+---
+# Source: kuttt-app/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-kuttt-app
+  labels:
+    helm.sh/chart: kuttt-app-0.1.0
+    app.kubernetes.io/name: kuttt-app
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kuttt-app
+      app.kubernetes.io/instance: release-name
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kuttt-app
+        app.kubernetes.io/instance: release-name
+    spec:
+      serviceAccountName: release-name-kuttt-app
+      securityContext:
+        {}
+      containers:
+        - name: kuttt-app
+          securityContext:
+            {}
+          image: "kutt/kutt:latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          command: ["/bin/sh", "-c"]
+          args:
+          - ./wait-for-it.sh postgres:5432 -- npm start
+          env:
+          - name: DB_HOST
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: .env
+          - name: DB_NAME
+            valueFrom:
+             secretKeyRef:
+              name: db-secret
+              key: DB_NAME
+          - name: DB_USER
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: .env
+          - name: DB_PASSWORD
+            valueFrom:
+             secretKeyRef:
+              name: db-secret
+              key: DB_PASSWORD
+          - name: REDIS_HOST
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: .env 
+          resources:
+            {}
+---
+# Source: kuttt-app/templates/db-sts.yml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: release-name-kuttt-app-sts
+  labels:
+    helm.sh/chart: kuttt-app-0.1.0
+    app.kubernetes.io/name: kuttt-app
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  serviceName: kuttdb-svc
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kuttt-app
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kuttt-app
+        app.kubernetes.io/instance: release-name
+    spec:
+      containers:
+      - image: postgres:12-alpine
+        name: postgres
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /data  
+        env: 
+        - name: POSTGRES_USER
+          valueFrom:
+           configMapKeyRef:
+            name: kutt-config
+            key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+           secretKeyRef:
+            name: db-secret
+            key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+           configMapKeyRef:
+            name: kutt-config
+            key: POSTGRES_DB       
+        ports:
+        - containerPort: 5432
+      - image: redis:6.0-alpine
+        name: redis
+        ports:
+          - containerPort: 6379
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+           claimName: kutt-pvc-pst
+        - name: redis-data
+          persistentVolumeClaim:
+           claimName: kutt-pvc-red
+---
+# Source: kuttt-app/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "release-name-kuttt-app-test-connection"
+  labels:
+    helm.sh/chart: kuttt-app-0.1.0
+    app.kubernetes.io/name: kuttt-app
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['release-name-kuttt-app:3000']
+  restartPolicy: Never
