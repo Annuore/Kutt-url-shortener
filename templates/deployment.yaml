@@ -45,27 +45,67 @@ spec:
             valueFrom:
              configMapKeyRef:
               name: kutt-config
-              key: .env
+              key: DB_HOST
           - name: DB_NAME
             valueFrom:
-             secretKeyRef:
-              name: db-secret
+             configMapKeyRef:
+              name: kutt-config
               key: DB_NAME
           - name: DB_USER
             valueFrom:
              configMapKeyRef:
               name: kutt-config
-              key: .env
+              key: DB_USER
           - name: DB_PASSWORD
             valueFrom:
-             secretKeyRef:
-              name: db-secret
+             configMapKeyRef:
+              name: kutt-config
               key: DB_PASSWORD
           - name: REDIS_HOST
             valueFrom:
              configMapKeyRef:
               name: kutt-config
-              key: .env 
+              key: REDIS_HOST     
+          - name: REDIS_PORT
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: REDIS_PORT     
+          - name: JWT_SECRET
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: JWT_SECRET  
+          - name: MAIL_HOST
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: MAIL_HOST  
+          - name: MAIL_PORT
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: MAIL_PORT  
+          - name: MAIL_USER
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: MAIL_USER  
+          - name: MAIL_PASSWORD
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: MAIL_PASSWORD  
+          - name: SITE_NAME
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: SITE_NAME
+          - name: DEFAULT_DOMAIN
+            valueFrom:
+             configMapKeyRef:
+              name: kutt-config
+              key: DEFAULT_DOMAIN
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "kuttt-app.fullname" . }}-sts
+  name: {{ include "kuttt-app.fullname" . }}-sts0
   labels:
     {{- include "kuttt-app.labels" . | nindent 4 }}
 spec:
@@ -31,27 +31,17 @@ spec:
             key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
           valueFrom:
-           secretKeyRef:
-            name: db-secret
+           configMapKeyRef:
+            name: kutt-config
             key: POSTGRES_PASSWORD
         - name: POSTGRES_DB
           valueFrom:
            configMapKeyRef:
             name: kutt-config
-            key: POSTGRES_DB       
+            key: POSTGRES_DB     
         ports:
         - containerPort: 5432
-      - image: redis:6.0-alpine
-        name: redis
-        ports:
-          - containerPort: 6379
-        volumeMounts:
-        - name: redis-data
-          mountPath: /data
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
            claimName: kutt-pvc-pst
-        - name: redis-data
-          persistentVolumeClaim:
-           claimName: kutt-pvc-red
