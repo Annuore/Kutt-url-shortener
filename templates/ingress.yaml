@@ -13,3 +13,15 @@ spec:
       name: kutt-svc
       port:
         number: 3000
+  rules:
+  - host: kuttk8s.local
+    http:
+     paths:
+     - path: /
+       pathType: Prefix
+       backend:
+         service:
+           name: kutt-svc
+           port:
+            number: 3000
+        
