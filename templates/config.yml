@@ -6,7 +6,7 @@ metadata:
     app: kutt
 data:
   SITE_NAME: Kutt
-  DEFAULT_DOMAIN: http://localhost
+  DEFAULT_DOMAIN: http://kuttk8s.local
   LINK_LENGTH: '6'
   DB_HOST: postgres
   DB_PORT: '5432'
