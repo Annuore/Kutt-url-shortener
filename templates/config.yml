@@ -19,7 +19,7 @@ data:
   DISALLOW_ANONYMOUS_LINKS: 'false'
   POSTGRES_USER: user
   POSTGRES_DB: kutt
-  REDIS_HOST: "redis"
+  REDIS_HOST: redis
   USER_LIMIT_PER_DAY: '50'
   NON_USER_COOLDOWN: '0'
   DEFAULT_MAX_STATS_PER_LINK: '5000'
@@ -31,7 +31,6 @@ data:
   MAIL_USER: k8s@mail.kutt
   MAIL_PASSWORD: admin 
   CONTACT_EMAIL: annuore@gmail
-  POSTGRES_USER: user
   POSTGRES_PASSWORD: pass
     
   

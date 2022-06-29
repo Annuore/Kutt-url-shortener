@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "kuttt-app.fullname" . }}-sts-redis
+  name: redis
   labels:
     {{- include "kuttt-app.labels" . | nindent 4 }}
 spec:
