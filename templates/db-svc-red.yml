@@ -7,7 +7,6 @@ metadata:
 spec:
   clusterIP: None
   ports: 
-    # - targetPort: 6379
-      port: 6379
+     - port: 6379
   selector:
     {{- include "kuttt-app.selectorLabels" . | nindent 4 }}
