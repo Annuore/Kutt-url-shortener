@@ -1,0 +1,16 @@
+grafana:
+  enabled: true
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana-dev.k8stunde.local
+prometheus:
+  enabled: true
+  isDefault: false
+  server:
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - prometheus-dev.k8stunde.local
