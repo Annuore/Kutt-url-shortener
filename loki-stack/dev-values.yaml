@@ -4,7 +4,7 @@ grafana:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - grafana-dev.k8stunde.local
+      - grafana-dev.local
 prometheus:
   enabled: true
   isDefault: false
@@ -13,4 +13,4 @@ prometheus:
       enabled: true
       ingressClassName: nginx
       hosts:
-        - prometheus-dev.k8stunde.local
+        - prometheus-dev.local
