@@ -5,8 +5,8 @@ metadata:
   labels:
     app: kutt
 data:
-  SITE_NAME: Kutt
-  DEFAULT_DOMAIN: http://kuttk8s.local
+  SITE_NAME: Kutt-k8
+  DEFAULT_DOMAIN: kuttk8s.local
   LINK_LENGTH: '6'
   DB_HOST: postgres
   DB_PORT: '5432'
@@ -33,5 +33,7 @@ data:
   CONTACT_EMAIL: annuore@gmail
   POSTGRES_PASSWORD: pass
     
+
+
   
   

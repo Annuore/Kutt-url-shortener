@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "kuttt-app.labels" . | nindent 4 }}
 spec:
-  serviceName: kuttdb-svc
+  serviceName: redis
   selector:
     matchLabels:
       {{- include "kuttt-app.selectorLabels" . | nindent 6 }}
@@ -20,8 +20,6 @@ spec:
       containers:
       - image: redis:6.0-alpine
         name: redis
-        ports:
-          - containerPort: 6379
         volumeMounts:
         - name: redis-data
           mountPath: /data

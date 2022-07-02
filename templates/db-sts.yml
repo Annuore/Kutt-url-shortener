@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "kuttt-app.labels" . | nindent 4 }}
 spec:
-  serviceName: kuttdb-svc
+  serviceName: postgres
   selector:
     matchLabels:
       {{- include "kuttt-app.selectorLabels" . | nindent 6 }}

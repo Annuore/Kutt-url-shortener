@@ -4,8 +4,6 @@ metadata:
   name: kutt-ing
   annotations:
     kubernetes.io/ingress.allow-http: "true"
-  labels:
-    app: kutt
 spec: 
   ingressClassName: nginx
   defaultBackend:
